@@ -3,6 +3,8 @@
   (extended-bindings) ;; same for Gambit extensions
   (not safe))         ;; assume code is correct (no type checking)
 
+(define (main repeat input)
+
 (define open-input-file* open-input-file)
 (define (pp-expression expr port) (write expr port) (newline port))
 (define (write-returning-len obj port) (write obj port) 1)
@@ -11135,14 +11137,14 @@
   (target-begin!-set! targ (lambda (info-port) (begin! info-port targ)))
   (put-target targ))
 
-(define (one-iter input)
-  (ce input 'm68000 'asm)
-  (asm-output-get))
-
-(define (main repeat input)
   (##exec-stats
    (lambda ()
      (let loop ((n repeat) (result #f))
+
+       (define (one-iter input)
+         (ce input 'm68000 'asm)
+         (asm-output-get))
+
        (if (> n 0)
            (loop (- n 1) (one-iter input))
            result)))))
